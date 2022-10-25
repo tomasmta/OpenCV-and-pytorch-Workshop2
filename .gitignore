@@ -1,0 +1,7 @@
+# ignore ALL .log files
+*.gz
+
+# ignore ALL files in ANY directory named temp
+temp/
+cifar-10-batches-py/
+__pycache__/
