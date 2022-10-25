@@ -7,6 +7,7 @@ import torchvision
 import torchvision.models as models
 from torchsummary import summary
 import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
 import numpy as np
 
 
@@ -53,6 +54,16 @@ def show_images():
 
     # making plots pretty DOES NOT WORK    
     plt.subplots_adjust(hspace=0.4)
+    plt.setp(plt.gcf().get_axes(), xticks=[], yticks=[]) # removes all ticks and labels
+    plt.show()
+
+def show_metrics():
+    accuracy = mpimg.imread("figures\\accuracy.png")
+    loss = mpimg.imread("figures\loss.png")
+    plt.subplot(2,1,1)
+    plt.imshow(accuracy)
+    plt.subplot(2,1,2)
+    plt.imshow(loss)
     plt.setp(plt.gcf().get_axes(), xticks=[], yticks=[]) # removes all ticks and labels
     plt.show()
 

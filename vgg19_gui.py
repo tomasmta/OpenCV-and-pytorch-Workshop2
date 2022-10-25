@@ -61,6 +61,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         self.structure_model_button.clicked.connect(vgg19utils.show_model_structure)
 
+        self.metrics_button.clicked.connect(vgg19utils.show_metrics)
+
 
 
     @QtCore.pyqtSlot()
