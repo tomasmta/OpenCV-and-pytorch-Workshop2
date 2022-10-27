@@ -9,7 +9,10 @@ from torchsummary import summary
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import numpy as np
+from torchvision.io import read_image
+from PIL import Image
 
+MODEL_PATH = "tomas_vgg19.pth"
 
 cifar_labels = ('plane', 'car', 'bird', 'cat','deer', 'dog',
                  'frog', 'horse', 'ship', 'truck')
@@ -52,7 +55,7 @@ def show_images():
         plt.imshow(img)
         counter += 1
 
-    # making plots pretty DOES NOT WORK    
+    # making plots pretty  
     plt.subplots_adjust(hspace=0.4)
     plt.setp(plt.gcf().get_axes(), xticks=[], yticks=[]) # removes all ticks and labels
     plt.show()
@@ -67,7 +70,34 @@ def show_metrics():
     plt.setp(plt.gcf().get_axes(), xticks=[], yticks=[]) # removes all ticks and labels
     plt.show()
 
+def plot_transforms(image_path):
+
+    image = read_image(image_path)
+    orig = transforms.ToPILImage()(image)
+    plt.subplot(1, 4, 1).set_title(f"Original")
+    plt.imshow(orig)
+
+    # Define Transforms
+    h_flip = transforms.RandomHorizontalFlip(p=1)
+    center_crop = transforms.CenterCrop(size = 200)
+    rand_resize = transforms.RandomResizedCrop(size=(100, 120), 
+                                            scale = (0.5, 1.5), 
+                                            ratio= (0.5, 1.5))
+    transf_set = [h_flip, center_crop, rand_resize]
+    names = ["Horizontal Flip", "Center Crop", 
+            "Random Resize"]
     
+
+    # Plot Transforms
+    for idx, (transf, name) in enumerate(zip(transf_set, names)):
+        transformed_img = transf(image)
+        pil_img = transforms.ToPILImage()(transformed_img)
+        plt.subplot(1, 4, idx+2).set_title(f"{name}")
+        plt.imshow(pil_img)
+    plt.setp(plt.gcf().get_axes(), xticks=[], yticks=[]) # removes all ticks and labels
+    plt.show()
+    
+       
 
 
 if __name__ == "__main__":
