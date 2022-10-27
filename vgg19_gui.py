@@ -63,6 +63,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         self.metrics_button.clicked.connect(vgg19utils.show_metrics)
 
+        self.augmentation_button.clicked.connect(self.transform_img)
+
 
 
     @QtCore.pyqtSlot()
@@ -70,6 +72,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         image = QtWidgets.QFileDialog.getOpenFileName(None, 'OpenFile' ,'', "Image file(*.png *.jpg *.bmp)")
         path = image[0]
         return path
+
+    def transform_img(self):
+        path = self.browse_img()
+        vgg19utils.plot_transforms(path)
     
 
 
