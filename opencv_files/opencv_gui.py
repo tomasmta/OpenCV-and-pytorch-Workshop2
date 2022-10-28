@@ -3,6 +3,9 @@ from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtCore import pyqtSlot
 import utils
 
+
+fil = utils.Filters()
+
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -71,13 +74,34 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         super(MainWindow, self).__init__(parent)
         self.setupUi(self)
 
-        self.gauss_blur_button.clicked.connect(self.browse_img)
+        self.gauss_blur_button.clicked.connect(self.something)
+
+        self.sobel_X_button.clicked.connect(self.x_sobel)
+
+        self.sobel_Y_button.clicked.connect(self.y_sobel)
 
     @QtCore.pyqtSlot()
     def browse_img(self):
         image = QtWidgets.QFileDialog.getOpenFileName(None, 'OpenFile' ,'', "Image file(*.png *.jpg *.bmp)")
         path = image[0]
         return path
+
+    def something(self):
+        path = self.browse_img()
+        image = utils.load_gray_image(path)
+        fil.blur_img(image)
+
+    def x_sobel(self):
+        path = self.browse_img()
+        image = utils.load_gray_image(path)
+        fil.get_x_edges(image)
+
+    def y_sobel(self):
+        path = self.browse_img()
+        image = utils.load_gray_image(path)
+        fil.get_y_edges(image)
+
+    
 
 
 if __name__ == "__main__":
