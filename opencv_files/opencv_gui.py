@@ -2,6 +2,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtCore import pyqtSlot
 import utils
+import cv2 as cv
 
 
 fil = utils.Filters()
@@ -74,11 +75,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         super(MainWindow, self).__init__(parent)
         self.setupUi(self)
 
-        self.gauss_blur_button.clicked.connect(self.something)
+        self.gauss_blur_button.clicked.connect(self.show_blur)
 
-        self.sobel_X_button.clicked.connect(self.x_sobel)
+        self.sobel_X_button.clicked.connect(self.filter_x_edges)
 
-        self.sobel_Y_button.clicked.connect(self.y_sobel)
+        self.sobel_Y_button.clicked.connect(self.filter_y_edges)
+
+        self.magnitude_button.clicked.connect(self.show_magnitude)
 
     @QtCore.pyqtSlot()
     def browse_img(self):
@@ -86,20 +89,31 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         path = image[0]
         return path
 
-    def something(self):
-        path = self.browse_img()
-        image = utils.load_gray_image(path)
-        fil.blur_img(image)
+    def show_blur(self):
+        b = fil.apply_gauss(building_image)
+        cv.imshow("Gauss Blur", b)
+        cv.waitKey(0)
+        cv.destroyAllWindows()
 
-    def x_sobel(self):
-        path = self.browse_img()
-        image = utils.load_gray_image(path)
-        fil.get_x_edges(image)
+    def filter_x_edges(self):
+        x = fil.apply_x_sobel(building_image)
+        cv.imshow("X Sobel Filter", x)
+        cv.waitKey(0)
+        cv.destroyAllWindows()
 
-    def y_sobel(self):
-        path = self.browse_img()
-        image = utils.load_gray_image(path)
-        fil.get_y_edges(image)
+    def filter_y_edges(self):
+        y = fil.apply_y_sobel(building_image)
+        cv.imshow("Y Sobel Filter", y)
+        cv.waitKey(0)
+        cv.destroyAllWindows()
+
+    def show_magnitude(self):
+        x = fil.apply_x_sobel(building_image)
+        y = fil.apply_y_sobel(building_image)
+        m = utils.get_magnitude(x, y)
+        cv.imshow("Magnitude", m)
+        cv.waitKey(0)
+        cv.destroyAllWindows()
 
     
 

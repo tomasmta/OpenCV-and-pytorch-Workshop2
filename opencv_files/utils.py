@@ -1,7 +1,7 @@
 import cv2 as cv
 import math
 import numpy as np
-import matplotlib.pyplot as plt 
+
 
 
 def load_gray_image(image_path):
@@ -14,6 +14,9 @@ def load_gray_image(image_path):
     gray_image = np.asarray(gray_image)/255.0
     return gray_image
 
+def get_magnitude(x, y):
+    magnitude = np.sqrt(pow(x, 2) + pow(y, 2))
+    return magnitude
 
 class Filters():
 
@@ -70,40 +73,24 @@ class Filters():
 
         return output_img
 
-
-    def show_imgs(self, img):
-        cv.imshow("Processed ", img)
-        cv.waitKey(0)
-        # cv.destroyAllWindows()
-
-    def blur_img(self, image):
-        """ 
-        Blurs image using 3x3 gaussian filter
-        """ 
-        # image = self.load_image(image_path)
+    def apply_gauss(self, image):
         kernel = self.gauss
         blurred_img = self.conv2d(image, kernel)
-        self.show_imgs(blurred_img)
+        return blurred_img
     
-    def get_x_edges(self, image):
-        """
-        Applies sobel X filter 
-        """
+    def apply_x_sobel(self, image):
         kernel = self.gauss
         blur_image = self.conv2d(image, kernel)
         kernel = self.sobel_x
-        processed_image = self.conv2d(blur_image, kernel)
-        self.show_imgs(processed_image)
+        sobel_X_image = self.conv2d(blur_image, kernel)
+        return sobel_X_image
 
-    def get_y_edges(self, image):
-        """
-        Applies sobel Y filter 
-        """
+    def apply_y_sobel(self, image):
         kernel = self.gauss
         blur_image = self.conv2d(image, kernel)
         kernel = self.sobel_y
-        processed_image = self.conv2d(blur_image, kernel)
-        self.show_imgs(processed_image)
+        sobel_Y_image = self.conv2d(blur_image, kernel)
+        return sobel_Y_image
 
 
 if __name__ == "__main__":
