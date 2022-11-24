@@ -1,6 +1,7 @@
 import cv2 as cv
 import math
 import numpy as np
+import matplotlib.pyplot as plt 
 
 
 
@@ -14,9 +15,11 @@ def load_gray_image(image_path):
     gray_image = np.asarray(gray_image)/255.0
     return gray_image
 
+
 def get_magnitude(x, y):
     magnitude = np.sqrt(pow(x, 2) + pow(y, 2))
     return magnitude
+
 
 class Filters():
 
@@ -92,6 +95,44 @@ class Filters():
         sobel_Y_image = self.conv2d(blur_image, kernel)
         return sobel_Y_image
 
+def apply_resize(image_path):
+    image = cv.imread(image_path)
+    h, w = len(image[0]), len(image[1])
+    scale = 0.5
+    transf_matrix = cv.getRotationMatrix2D(center=(0,0), angle=0, scale = scale)
+    new_image = cv.warpAffine(image, transf_matrix, (h, w))
+    return new_image
 
-if __name__ == "__main__":
-    main()
+def apply_translation(image_path):
+    image1 = cv.imread(image_path)
+    image2= image1.copy()
+    h, w = len(image1[0]), len(image1[1])
+    scale = 0.5
+
+    transformation1 = cv.getRotationMatrix2D(center=(0,0), angle = 0, scale = scale)
+    transformation2 = cv.getRotationMatrix2D(center=(h,w), angle = 0, scale = scale)
+
+    new_image_1 = cv.warpAffine(image1, transformation1, (h, w))
+    new_image_2 = cv.warpAffine(image2, transformation2, (h, w))
+
+    combined_img = cv.addWeighted(new_image_1, 1.0, new_image_2, 1.0, 0.0)
+
+    return combined_img
+
+def apply_rotation_and_scaling(image_path):
+    translated_image = apply_translation(image_path)
+    out_size = (430, 430)
+    scale = 0.5
+    transf = cv.getRotationMatrix2D((215, 215), 45, scale)
+    rotated_image = cv.warpAffine(translated_image, transf, out_size)
+    return rotated_image
+
+def apply_shear(image_path):
+    out_size = (430, 430)
+    input_image = apply_rotation_and_scaling(image_path)
+    old_loc = np.array([[50,50],[200,50],[50,200]]).astype("float32")
+    new_loc = np.array([[10,100],[100,50],[100,250]]).astype("float32")
+    transf = cv.getAffineTransform(old_loc, new_loc)
+    out_image = cv.warpAffine(input_image, transf, out_size)
+    return out_image
+

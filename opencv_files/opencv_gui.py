@@ -83,6 +83,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         self.magnitude_button.clicked.connect(self.show_magnitude)
 
+        self.resize_button.clicked.connect(self.resize_image) 
+
+        self.translate_button.clicked.connect(self.translate_image)
+
+        self.rotate_button.clicked.connect(self.rotate_and_scale)
+
+        self.shear_button.clicked.connect(self.shear)
+
     @QtCore.pyqtSlot()
     def browse_img(self):
         image = QtWidgets.QFileDialog.getOpenFileName(None, 'OpenFile' ,'', "Image file(*.png *.jpg *.bmp)")
@@ -90,32 +98,66 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         return path
 
     def show_blur(self):
-        b = fil.apply_gauss(building_image)
+        path = self.browse_img()
+        image = utils.load_gray_image(path)
+        b = fil.apply_gauss(image)
         cv.imshow("Gauss Blur", b)
         cv.waitKey(0)
         cv.destroyAllWindows()
 
     def filter_x_edges(self):
-        x = fil.apply_x_sobel(building_image)
+        path = self.browse_img()
+        image = utils.load_gray_image(path)
+        x = fil.apply_x_sobel(image)
         cv.imshow("X Sobel Filter", x)
         cv.waitKey(0)
         cv.destroyAllWindows()
 
     def filter_y_edges(self):
-        y = fil.apply_y_sobel(building_image)
+        path = self.browse_img()
+        image = utils.load_gray_image(path)
+        y = fil.apply_y_sobel(image)
         cv.imshow("Y Sobel Filter", y)
         cv.waitKey(0)
         cv.destroyAllWindows()
 
     def show_magnitude(self):
-        x = fil.apply_x_sobel(building_image)
-        y = fil.apply_y_sobel(building_image)
+        path = self.browse_img()
+        image = utils.load_gray_image(path)
+        x = fil.apply_x_sobel(image)
+        y = fil.apply_y_sobel(image)
         m = utils.get_magnitude(x, y)
         cv.imshow("Magnitude", m)
         cv.waitKey(0)
         cv.destroyAllWindows()
 
+    def resize_image(self):
+        path = self.browse_img()
+        resized_img = utils.apply_resize(path)
+        cv.imshow("Resize and Translate", resized_img)
+        cv.waitKey(0)
+        cv.destroyAllWindows()
     
+    def translate_image(self):
+        path = self.browse_img()
+        translated_img = utils.apply_translation(path)
+        cv.imshow("Translate and Duplicate", translated_img)
+        cv.waitKey(0)
+        cv.destroyAllWindows()
+
+    def rotate_and_scale(self):
+        path = self.browse_img()
+        rotated_img = utils.apply_rotation_and_scaling(path)
+        cv.imshow("Rotation and Scaling", rotated_img)
+        cv.waitKey(0)
+        cv.destroyAllWindows()
+
+    def shear(self):
+        path = self.browse_img()
+        shear_img = utils.apply_shear(path)
+        cv.imshow("Shear", shear_img)
+        cv.waitKey(0)
+        cv.destroyAllWindows()
 
 
 if __name__ == "__main__":
